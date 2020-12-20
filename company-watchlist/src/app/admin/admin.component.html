@@ -1,0 +1,44 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4">
+                <h3>Create user:</h3>
+                <form [formGroup]="loginForm" class="form-container" (ngSubmit)="onSubmit()">
+                    <label class="label-class" for="name">Name:</label>
+                    <input type="text" formControlName="name" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.name.errors }" />
+                    <label class="label-class" for="email">Email (will be used for login):</label>
+                    <input type="email" formControlName="email" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.email.errors }" />
+                    <label class="label-class" for="password">Password:</label>
+                    <input type="password" formControlName="password" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.password.errors }" />
+                    <button class="btn btn-success">
+                       Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <h3>View all users:</h3>
+                <table>
+                    <thead>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users">
+                            <td>{{user.name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{getUserRole(user.roleId)}}</td>
+                            <td *ngIf="user.roleId !== 1"><button class="btn btn-danger" (click)="deleteUser(user.id)">Delete user</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<button (click)="logout()">Logout</button>

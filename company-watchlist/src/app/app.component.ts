@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from './auth.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'company-watchlist';
+  constructor(){
+  }
 }

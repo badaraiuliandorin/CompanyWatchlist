@@ -1,0 +1,19 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4">
+                <form [formGroup]="loginForm" class="form-container" (ngSubmit)="onSubmit()">
+                    <label class="label-class" for="email">Email:</label>
+                    <input type="email" formControlName="email" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.email.errors }" />
+                    <label class="label-class" for="password">Password:</label>
+                    <input type="password" formControlName="password" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.password.errors }" />
+                    <button class="btn btn-success">
+                       Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
