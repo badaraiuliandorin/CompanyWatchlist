@@ -1,2 +1,227 @@
-<p>WATCHLIST COMPONENT</p>
-<button (click)="logout()">Logout</button>
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4">
+                <form [formGroup]="searchForm" class="form-container" (ngSubmit)="onSubmit()">
+                    <label class="label-class" for="symbol">Search:</label>
+                    <input type="text" formControlName="search" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.search.errors }" />
+                    <button class="btn btn-success">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="row" *ngIf="searchedCompanies && searchedCompanies.length > 0">
+            <div class="col-lg-4">
+                <h3>Company results:</h3>
+                <table>
+                    <thead>
+                        <th>Symbol</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Region</th>
+                        <th>Market open</th>
+                        <th>Market close</th>
+                        <th>Timezone</th>
+                        <th>Currency</th>
+                        <th>Match score</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let searchResult of searchedCompanies">
+                            <td>{{searchResult.symbol}}</td>
+                            <td>{{searchResult.name}}</td>
+                            <td>{{searchResult.type}}</td>
+                            <td>{{searchResult.region}}</td>
+                            <td>{{searchResult.marketOpen}}</td>
+                            <td>{{searchResult.marketClose}}</td>
+                            <td>{{searchResult.timezone}}</td>
+                            <td>{{searchResult.currency}}</td>
+                            <td>{{searchResult.matchScore}}</td>
+                            <td *ngIf="!existsCompanyInWatchlist(searchResult.symbol)"><button class="btn btn-success"
+                                    (click)="addToWatchlist(searchResult.symbol)">Add company to watchlist</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <h3>Followed companies:</h3>
+                <table>
+                    <thead>
+                        <th>Symbol</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let company of companies">
+                            <td>{{company.symbol}}</td>
+                            <td><button class="btn btn-success" (click)="viewCompanyDetails(company.symbol)">View
+                                    company stock and overview</button></td>
+                            <td><button class="btn btn-danger" (click)="removeCompanyFromWatchlist(company.id)">Remove
+                                    company from watchlist</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" *ngIf="currentCompanySymbol">
+            <div class="col-lg-4">
+                <h3>Company ({{currentCompanySymbol}}) stock:</h3>
+                <table>
+                    <thead>
+                        <th>Open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Close</th>
+                        <th>Volume</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{currentWatchlistStock.open}}</td>
+                            <td>{{currentWatchlistStock.high}}</td>
+                            <td>{{currentWatchlistStock.low}}</td>
+                            <td>{{currentWatchlistStock.close}}</td>
+                            <td>{{currentWatchlistStock.volume}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" *ngIf="currentCompanySymbol">
+            <div class="col-lg-4">
+                <h3>Company ({{currentCompanySymbol}}) overview:</h3>
+                <table>
+                    <thead>
+                        <th>symbol</th>
+                        <th>assetType</th>
+                        <th>name</th>
+                        <th>description</th>
+                        <th>exchange</th>
+                        <th>currency</th>
+                        <th>country</th>
+                        <th>sector</th>
+                        <th>industry</th>
+                        <th>address</th>
+                        <th>fullTimeEmployees</th>
+                        <th>fiscalYearEnd</th>
+                        <th>latestQuarter</th>
+                        <th>marketCapitalization</th>
+                        <th>eBITDA</th>
+                        <th>pERatio</th>
+                        <th>pEGRatio</th>
+                        <th>bookValue</th>
+                        <th>dividendPerShare</th>
+                        <th>dividendYield</th>
+                        <th>ePS</th>
+                        <th>revenuePerShareTTM</th>
+                        <th>profitMargin</th>
+                        <th>operatingMarginTTM</th>
+                        <th>returnOnAssetsTTM</th>
+                        <th>returnOnEquityTTM</th>
+                        <th>revenueTTM</th>
+                        <th>grossProfitTTM</th>
+                        <th>dilutedEPSTTM</th>
+                        <th>quarterlyEarningsGrowthYOY</th>
+                        <th>quarterlyRevenueGrowthYOY</th>
+                        <th>analystTargetPrice</th>
+                        <th>trailingPE</th>
+                        <th>forwardPE</th>
+                        <th>priceToSalesRatioTTM</th>
+                        <th>priceToBookRatio</th>
+                        <th>eVToRevenue</th>
+                        <th>eVToEBIthA</th>
+                        <th>beta</th>
+                        <th>fiftyTwoWeekHigh</th>
+                        <th>fiftyTwoWeekLow</th>
+                        <th>fiftyDayMovingAverage</th>
+                        <th>twoHundredDayMovingAverage</th>
+                        <th>sharesOutstanding</th>
+                        <th>sharesFloat</th>
+                        <th>sharesShort</th>
+                        <th>sharesShortPriorMonth</th>
+                        <th>shortRatio</th>
+                        <th>shortPercentOutstanding</th>
+                        <th>shortPercentFloat</th>
+                        <th>percentInsiders</th>
+                        <th>percentInstitutions</th>
+                        <th>forwardAnnualDividendRate</th>
+                        <th>forwardAnnualDividendYield</th>
+                        <th>payoutRatio</th>
+                        <th>dividendDate</th>
+                        <th>exDividendDate</th>
+                        <th>lastSplitFactor</th>
+                        <th>lastSplithate</th>
+                        <th>symbol</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{currentWatchlistOverview.symbol}}</td>
+                            <td>{{currentWatchlistOverview.assetType}}</td>
+                            <td>{{currentWatchlistOverview.name}}</td>
+                            <td>{{currentWatchlistOverview.description}}</td>
+                            <td>{{currentWatchlistOverview.exchange}}</td>
+                            <td>{{currentWatchlistOverview.currency}}</td>
+                            <td>{{currentWatchlistOverview.country}}</td>
+                            <td>{{currentWatchlistOverview.sector}}</td>
+                            <td>{{currentWatchlistOverview.industry}}</td>
+                            <td>{{currentWatchlistOverview.address}}</td>
+                            <td>{{currentWatchlistOverview.fullTimeEmployees}}</td>
+                            <td>{{currentWatchlistOverview.fiscalYearEnd}}</td>
+                            <td>{{currentWatchlistOverview.latestQuarter}}</td>
+                            <td>{{currentWatchlistOverview.marketCapitalization}}</td>
+                            <td>{{currentWatchlistOverview.eBITDA}}</td>
+                            <td>{{currentWatchlistOverview.pERatio}}</td>
+                            <td>{{currentWatchlistOverview.pEGRatio}}</td>
+                            <td>{{currentWatchlistOverview.bookValue}}</td>
+                            <td>{{currentWatchlistOverview.dividendPerShare}}</td>
+                            <td>{{currentWatchlistOverview.dividendYield}}</td>
+                            <td>{{currentWatchlistOverview.ePS}}</td>
+                            <td>{{currentWatchlistOverview.revenuePerShareTTM}}</td>
+                            <td>{{currentWatchlistOverview.profitMargin}}</td>
+                            <td>{{currentWatchlistOverview.operatingMarginTTM}}</td>
+                            <td>{{currentWatchlistOverview.returnOnAssetsTTM}}</td>
+                            <td>{{currentWatchlistOverview.returnOnEquityTTM}}</td>
+                            <td>{{currentWatchlistOverview.revenueTTM}}</td>
+                            <td>{{currentWatchlistOverview.grossProfitTTM}}</td>
+                            <td>{{currentWatchlistOverview.dilutedEPSTTM}}</td>
+                            <td>{{currentWatchlistOverview.quarterlyEarningsGrowthYOY}}</td>
+                            <td>{{currentWatchlistOverview.quarterlyRevenueGrowthYOY}}</td>
+                            <td>{{currentWatchlistOverview.analystTargetPrice}}</td>
+                            <td>{{currentWatchlistOverview.trailingPE}}</td>
+                            <td>{{currentWatchlistOverview.forwardPE}}</td>
+                            <td>{{currentWatchlistOverview.priceToSalesRatioTTM}}</td>
+                            <td>{{currentWatchlistOverview.priceToBookRatio}}</td>
+                            <td>{{currentWatchlistOverview.eVToRevenue}}</td>
+                            <td>{{currentWatchlistOverview.eVToEBITDA}}</td>
+                            <td>{{currentWatchlistOverview.beta}}</td>
+                            <td>{{currentWatchlistOverview.fiftyTwoWeekHigh}}</td>
+                            <td>{{currentWatchlistOverview.fiftyTwoWeekLow}}</td>
+                            <td>{{currentWatchlistOverview.fiftyDayMovingAverage}}</td>
+                            <td>{{currentWatchlistOverview.twoHundredDayMovingAverage}}</td>
+                            <td>{{currentWatchlistOverview.sharesOutstanding}}</td>
+                            <td>{{currentWatchlistOverview.sharesFloat}}</td>
+                            <td>{{currentWatchlistOverview.sharesShort}}</td>
+                            <td>{{currentWatchlistOverview.sharesShortPriorMonth}}</td>
+                            <td>{{currentWatchlistOverview.shortRatio}}</td>
+                            <td>{{currentWatchlistOverview.shortPercentOutstanding}}</td>
+                            <td>{{currentWatchlistOverview.shortPercentFloat}}</td>
+                            <td>{{currentWatchlistOverview.percentInsiders}}</td>
+                            <td>{{currentWatchlistOverview.percentInstitutions}}</td>
+                            <td>{{currentWatchlistOverview.forwardAnnualDividendRate}}</td>
+                            <td>{{currentWatchlistOverview.forwardAnnualDividendYield}}</td>
+                            <td>{{currentWatchlistOverview.payoutRatio}}</td>
+                            <td>{{currentWatchlistOverview.dividendDate}}</td>
+                            <td>{{currentWatchlistOverview.exDividendDate}}</td>
+                            <td>{{currentWatchlistOverview.lastSplitFactor}}</td>
+                            <td>{{currentWatchlistOverview.lastSplitDate}}</td>
+                            <td>{{currentWatchlistOverview.symbol}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <button (click)="logout()">Logout</button>
+        </div>
+    </div>
+</div>

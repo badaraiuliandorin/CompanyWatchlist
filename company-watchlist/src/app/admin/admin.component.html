@@ -14,7 +14,7 @@
                     <input type="password" formControlName="password" class="form-control"
                         [ngClass]="{ 'is-invalid': f.password.errors }" />
                     <button class="btn btn-success">
-                       Submit
+                        Submit
                     </button>
                 </form>
             </div>
@@ -33,12 +33,15 @@
                             <td>{{user.name}}</td>
                             <td>{{user.email}}</td>
                             <td>{{getUserRole(user.roleId)}}</td>
-                            <td *ngIf="user.roleId !== 1"><button class="btn btn-danger" (click)="deleteUser(user.id)">Delete user</button></td>
+                            <td *ngIf="user.roleId !== 1"><button class="btn btn-danger"
+                                    (click)="deleteUser(user.id)">Delete user</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <div class="row">
+            <button (click)="logout()">Logout</button>
+        </div>
     </div>
 </div>
-<button (click)="logout()">Logout</button>
